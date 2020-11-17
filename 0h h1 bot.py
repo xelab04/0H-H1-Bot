@@ -1,5 +1,5 @@
 array = []
-file_dest = "C:/Users/HP Gold/Desktop/GRID.txt"
+file_dest = <INSERT GRID TEXT FILE HERE>
 
 with open(file_dest,"r") as file:
     lines = file.readlines()
