@@ -1,5 +1,5 @@
 array = []
-file_dest = <INSERT GRID TEXT FILE HERE>
+file_dest = "grid.txt"
 
 with open(file_dest,"r") as file:
     lines = file.readlines()
@@ -39,6 +39,19 @@ def not_really(colour):
     else:
         print(f"Invalid Colour {colour} Passed Into Function")
 
+def compare(line_one,line_two):
+    #print("Line one",line_one)
+    #print("Line two",line_two)
+    length = len(line_one)
+    stupid_list = []
+    for i in range(length):
+        if line_one[i] != line_two[i] and line_one[i] != "0":
+            return False,None
+        else:
+            if line_one[i] == "0":
+                stupid_list.append((i,line_two[i]))
+    return True,stupid_list
+
 change = True
 while change == True:
     change = False
@@ -76,6 +89,14 @@ while change == True:
                 if b_count == grid_size/2:
                     array[y][x] = (not_really("B"))
                     change = True
+
+            if line.count("0") == 2 and change == False:
+                for line_2 in array:
+                    if line_2.count("0") == 0:
+                        same_list, stupid_list = compare(line,line_2)
+                        if same_list == True:
+                            array[y][stupid_list[0][0]] = not_really(stupid_list[0][1])#inversing colour
+                            #changing array values
         #END ROWS
 
     #COLUMNS
@@ -114,6 +135,19 @@ while change == True:
                 if b_count == grid_size/2:
                     array[y][x] = (not_really("B"))
                     change = True
+
+            if line.count("0") == 2 and change == False:
+
+                for nx in range(grid_size):
+                    new_temp_list = []
+                    
+                    for ny in range(grid_size):
+                        new_temp_list.append(array[ny][nx])
+                    if new_temp_list.count("0") == 0:
+                        same_list, stupid_list = compare(temp_list,new_temp_list)
+                        if same_list == True:
+                            array[stupid_list[0][0]][x] = not_really(stupid_list[0][1])#inversing colour
+                            #changing array values
             
 
 output(array)
