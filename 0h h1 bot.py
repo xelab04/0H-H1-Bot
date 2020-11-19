@@ -1,5 +1,5 @@
 array = []
-file_dest = "grid.txt"
+file_dest = "input.txt"
 
 with open(file_dest,"r") as file:
     lines = file.readlines()
@@ -16,9 +16,7 @@ def output(array):
     for row in array:
         print(row)
 
-
 def is_colour(x,y,dx1,dx2,dy1,dy2,grid):
-    #x,y = (x,y)
     try:
         if grid[y][x] == "0":
             sq_one = grid[y+dy1][x+dx1]
@@ -31,7 +29,6 @@ def is_colour(x,y,dx1,dx2,dy1,dy2,grid):
     except IndexError:      return False,None
 
 def not_really(colour):
-    #print(colour)
     if colour == "R":
         return "B"
     elif colour == "B":
@@ -40,8 +37,6 @@ def not_really(colour):
         print(f"Invalid Colour {colour} Passed Into Function")
 
 def compare(line_one,line_two):
-    #print("Line one",line_one)
-    #print("Line two",line_two)
     length = len(line_one)
     stupid_list = []
     for i in range(length):
@@ -52,6 +47,32 @@ def compare(line_one,line_two):
                 stupid_list.append((i,line_two[i]))
     return True,stupid_list
 
+def thing(direction):
+    var = False
+    colour = None
+
+    if direction == "x":
+        a,b,c,d = 1,-1,1,2
+        e,f,g,h = 0,0,0,0
+
+    else:
+        a,b,c,d = 0,0,0,0
+        e,f,g,h = 1,-1,1,2
+    
+    if var == False:
+        try:    var,colour = is_colour(x,y,a,b,e,f,array)
+        except:     pass
+
+    if var == False:
+        try:    var,colour = is_colour(x,y,c,d,g,h,array)
+        except:     pass
+        
+    if var == False:
+        try:    var,colour = is_colour(x,y,-c,-d,-g,-h,array)
+        except:     pass
+
+    return var,colour
+
 change = True
 while change == True:
     change = False
@@ -61,24 +82,18 @@ while change == True:
         line = array[y]
         
         for x in range(grid_size):
-            square_colour = line[x]
-            if x == 0:
-                var,colour = is_colour(x,y,1,2,0,0,array)
-            elif x == grid_size-1:
-                var,colour = is_colour(x,y,-1,-2,0,0,array)
-            else:
-                var,colour = is_colour(x,y,1,-1,0,0,array)
 
-                if var == False:
-                    var,colour = is_colour(x,y,-1,-2,0,0,array)
-                if var == False:
-                    var,colour = is_colour(x,y,1,2,0,0,array)
+            #START FIRST RULE
+            var,colour = thing("x")
 
             if var == True:
                 change = True
                 array[y][x] = (not_really(colour))
-            
-            if line.count("0") > 0 and array[y][x] == "0" and change == False:
+            #END FIRST RULE
+
+
+            #START SECOND RULE
+            if line.count("0") > 0 and array[y][x] == "0":# and change == False:
                 
                 r_count = line.count("R")
                 b_count = line.count("B")
@@ -89,14 +104,18 @@ while change == True:
                 if b_count == grid_size/2:
                     array[y][x] = (not_really("B"))
                     change = True
+            #END SECOND RULE
 
-            if line.count("0") == 2 and change == False:
+                    
+            #START THIRD RULE
+            if line.count("0") == 2:# and change == False:
                 for line_2 in array:
                     if line_2.count("0") == 0:
                         same_list, stupid_list = compare(line,line_2)
                         if same_list == True:
                             array[y][stupid_list[0][0]] = not_really(stupid_list[0][1])#inversing colour
-                            #changing array values
+            #END THIRD RULE
+                            
         #END ROWS
 
     #COLUMNS
@@ -107,18 +126,7 @@ while change == True:
             temp_list.append(array[y][x])
             
         for y in range(grid_size):
-            if y == 0:
-                var,colour = is_colour(x,y,0,0,1,2,array)
-            elif y == grid_size-1:
-                var,colour = is_colour(x,y,0,0,-1,-2,array)
-            else:
-                var,colour = is_colour(x,y,0,0,1,-1,array)
-                #checks if in middle
-
-                if var == False:
-                    var,colour = is_colour(x,y,0,0,-1,-2,array)
-                if var == False:
-                    var,colour = is_colour(x,y,0,0,1,2,array)
+            var,colour = thing("y")
                     
             if var == True:
                 change = True
@@ -136,7 +144,7 @@ while change == True:
                     array[y][x] = (not_really("B"))
                     change = True
 
-            if line.count("0") == 2 and change == False:
+            if temp_list.count("0") == 2 and change == False:
 
                 for nx in range(grid_size):
                     new_temp_list = []
@@ -151,7 +159,7 @@ while change == True:
             
 
 output(array)
-with open(file_dest,"w") as file:
+with open("output.txt","w") as file:
     for line in array:
         text = ""
         for i in range(grid_size):
