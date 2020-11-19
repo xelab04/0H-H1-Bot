@@ -6,7 +6,7 @@ Each grid square has 3 states, red, blue, blank. The objective is to fill the gr
 
 The rules are as follows:
   
-  -There must not me 3 squares of the same colour next to each other, vertically or horizontally.
+  -There must not be 3 squares of the same colour next to each other, vertically or horizontally.
   
   -There must be the same number of red squares as blue squares in the columns and rows.
   
